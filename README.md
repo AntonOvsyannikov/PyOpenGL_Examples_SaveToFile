@@ -1,0 +1,2 @@
+# PyOpenGL_Examples_SaveToFile
+Several examples to show how to use PyOpenGL for off-screen rendering and saving rendered image to file, including anti-aliasing feature. 3 methods are used: using GLUT, using WGL to create context with default framebuffers, as well as manual creation of OpenGL Framebuffer Object and rendering to it. Also there is several examples of how to display results of off-screen rendering to Win32 window, created manually.
