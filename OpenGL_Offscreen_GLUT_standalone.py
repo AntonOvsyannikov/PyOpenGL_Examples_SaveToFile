@@ -1,3 +1,8 @@
+'''
+Offscreen rendering using GLUT hidden window
+Standalone code - not using LibGL from this repository
+'''
+
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *

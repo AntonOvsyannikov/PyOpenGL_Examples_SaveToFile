@@ -1,7 +1,12 @@
+'''
+Simple GLUT-based init and double-buffered OpenGL rendering
+Use keys to rotate the view
+'''
+
 from OpenGL.GLUT import *
 import sys
 
-from SceneRenderer import *
+from Renderers.Renderer3D import *
 
 global render
 
@@ -30,7 +35,7 @@ def main():
     glutInitWindowSize(300, 300)
     glutInitWindowPosition(50, 50)
     glutInit(sys.argv)
-    glutCreateWindow(b"OpenGL GLUT Window")
+    glutCreateWindow(b"OpenGL GLUT Window - Use arrow keys")
     glutDisplayFunc(draw)
     glutSpecialFunc(specialkeys)
 

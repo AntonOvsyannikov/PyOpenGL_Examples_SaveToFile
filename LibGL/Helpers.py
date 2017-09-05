@@ -6,7 +6,7 @@ from PIL import Image
 # =========================================
 # Helpers
 
-def myglSolidCube(x1,y1,z1,x2,y2,z2, texture):
+def SolidCube(x1, y1, z1, x2, y2, z2, texture):
 
     glBindTexture(GL_TEXTURE_2D, texture)
 
@@ -82,7 +82,7 @@ def myglSolidCube(x1,y1,z1,x2,y2,z2, texture):
     glVertex3f(x2, y1, z1)
     glEnd()
 
-def myglLoadTexture(fileName):
+def LoadTexture(fileName):
 
     image = Image.open(fileName)
     width = image.size[0]

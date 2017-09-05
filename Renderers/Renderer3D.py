@@ -17,7 +17,7 @@ class SceneRenderer:
     def __init__(self, width, height):
 
         self.bounds = 1.
-        self.texture = myglLoadTexture("wp.bmp")
+        self.texture = LoadTexture("wp.bmp")
 
         glClearColor(0.2,0.2,0.2,1)
         glClearDepth(1.0)
@@ -71,18 +71,18 @@ class SceneRenderer:
         glRotated(self.a1, 0., 1., 0.)
         glRotated(self.a2, 1., 0., 0.)
 
-        #myglSolidCube(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5, self.texture)
+        #SolidCube(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5, self.texture)
 
         glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, (1,0,0,1))
-        myglSolidCube(0, -0.1, -0.1, 0.9, 0.1, 0.1, 0)
+        SolidCube(0, -0.1, -0.1, 0.9, 0.1, 0.1, 0)
 
         glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, (0,1,0,1))
-        myglSolidCube(-0.1, 0, -0.1, 0.1, 0.9, 0.1, 0)
+        SolidCube(-0.1, 0, -0.1, 0.1, 0.9, 0.1, 0)
 
         glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, (0,0,1,1))
-        myglSolidCube(-0.1, -0.1, 0, 0.1, 0.1, 0.9, 0)
+        SolidCube(-0.1, -0.1, 0, 0.1, 0.1, 0.9, 0)
 
-        myglSolidCube(0.3, 0.3, 0.3, 0.7, 0.7, 0.7, self.texture)
+        SolidCube(0.3, 0.3, 0.3, 0.7, 0.7, 0.7, self.texture)
 
         glFlush()
 

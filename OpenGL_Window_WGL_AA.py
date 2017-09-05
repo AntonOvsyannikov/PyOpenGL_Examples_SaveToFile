@@ -1,15 +1,19 @@
+'''
+Render using default WGL buffers in the second hidden window
+Then resize rendered image with anti-aliasing and display it in the window
+Use mouse to rotate the view
+'''
+
 from PIL import Image
 from PIL import ImageWin
 from PIL import ImageOps
-
-from SceneRenderer import *
 
 from LibGL.Win32 import *
 from LibGL.Context import *
 
 from win32gui import *
 
-from SceneRenderer import *
+from Renderers.Renderer3D import *
 
 # =========================================
 global render

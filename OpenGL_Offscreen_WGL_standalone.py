@@ -1,3 +1,8 @@
+'''
+Offscreen rendering using WGL default buffers with hidden window
+Standalone code - not using LibGL from this repository
+'''
+
 from win32api import *
 from win32con import *
 from win32gui import *
@@ -27,6 +32,7 @@ PFD_SUPPORT_OPENGL =    0x00000020
 def mywglCreateContext(hWnd):
     pfd = PIXELFORMATDESCRIPTOR()
 
+    # note - we don't using double buffering
     pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL
     pfd.iPixelType = PFD_TYPE_RGBA
     pfd.cColorBits = 32
@@ -50,44 +56,6 @@ def mywglDeleteContext():
     wglMakeCurrent(0, 0)
     if hrc: wglDeleteContext(hrc)
 
-
-# =========================================
-# OpenGL Framebuffer Objects helpers
-
-def myglCreateBuffers(width, height):
-
-    fbo = glGenFramebuffers(1)
-    color_buf = glGenRenderbuffers(1)
-    depth_buf = glGenRenderbuffers(1)
-
-    # binds created FBO to context both for read and draw
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo)
-
-    # bind color render buffer
-    glBindRenderbuffer(GL_RENDERBUFFER, color_buf)
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, width, height)
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, color_buf)
-
-    # bind depth render buffer - no need for 2D, but necessary for real 3D rendering
-    glBindRenderbuffer(GL_RENDERBUFFER, depth_buf)
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height)
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_buf)
-
-    return fbo, color_buf, depth_buf, width, height
-
-def myglDeleteBuffers(buffers):
-    fbo, color_buf, depth_buf, width, height = buffers
-    glBindFramebuffer(GL_FRAMEBUFFER, 0)
-    glDeleteRenderbuffers(1, color_buf)
-    glDeleteRenderbuffers(1, depth_buf)
-    glDeleteFramebuffers(1, fbo)
-
-def myglReadColorBuffer(buffers):
-    fbo, color_buf, depth_buf, width, height = buffers
-    glPixelStorei(GL_PACK_ALIGNMENT, 1)
-    glReadBuffer(GL_COLOR_ATTACHMENT0)
-    data = glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE)
-    return data, width, height
 
 # =========================================
 # Scene rendering
@@ -147,17 +115,13 @@ def main():
 
     wndClassAtom = RegisterClass(wndClass)
 
-    # don't care about window size, couse we will create independent buffers
-    hWnd = CreateWindow(wndClassAtom, '', WS_POPUP, 0, 0, 1, 1, 0, 0, hInstance, None)
+    # we care about window size, because we use default buffers, associated with the window
+    width, height = 300, 300
+    hWnd = CreateWindow(wndClassAtom, '', WS_POPUP, 0, 0, width, height, 0, 0, hInstance, None)
 
     # Ok, window created, now we can create OpenGL context
 
     mywglCreateContext(hWnd)
-
-    # In OpenGL context create Framebuffer Object (FBO) and attach Color and Depth render buffers to it
-
-    width, height = 300, 300
-    buffers = myglCreateBuffers(width, height)
 
     # Init our renderer
     renderInit(width, height)
@@ -167,18 +131,16 @@ def main():
 
     render()
 
-    data, width, height = myglReadColorBuffer(buffers)
+    glReadBuffer(GL_FRONT)
+
+    glPixelStorei(GL_PACK_ALIGNMENT, 1)
+    data = glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE)
     image = Image.frombytes("RGBA", (width, height), data)
     image = ImageOps.flip(image) # in my case image is flipped top-bottom for some reason
 
-    # it's easy to achive antialiasing effect by resizing rendered image
-    # don't forget to increase initial rendered image resolution and line thikness for 2D
-    #image = image.resize((width/2, height/2), Image.ANTIALIAS)
-
-    image.save("fbo.png", "PNG")
+    image.save("wgl.png", "PNG")
 
     # Shutdown everything
-    myglDeleteBuffers(buffers)
     mywglDeleteContext()
 
 main()

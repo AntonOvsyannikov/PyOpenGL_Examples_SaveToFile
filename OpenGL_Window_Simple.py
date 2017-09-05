@@ -1,9 +1,15 @@
-from SceneRenderer import *
+'''
+Standard double-buffered OpenGL rendering
+Using WGL SwapBuffers() to show rendered result in the main window
+Use mouse to rotate the view
+'''
 
 from LibGL.Win32 import *
 from LibGL.Context import *
 
 from win32gui import *
+
+from Renderers.Renderer3D import *
 
 # =========================================
 
